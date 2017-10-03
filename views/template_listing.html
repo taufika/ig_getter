@@ -1,0 +1,19 @@
+<%- include('./component/top.html') %>
+<div class="ui container" style="margin-top: 40px;">
+  <h1 class="ui dividing header">Listing Untuk <%- nama %></h1>
+  <div class="ui three column grid">
+    <% data.forEach(entry => { %>
+      <div class="column">
+        <div class="ui fluid card">
+          <div class="image">
+            <img src="<%- entry.image.url %>" alt="<%- entry.name %>">
+          </div>
+          <div class="extra content">
+            <%- entry.name %>
+          </div>
+        </div>
+      </div>
+    <% }); %>
+  </div>
+</div>
+<%- include('./component/bottom.html') %>

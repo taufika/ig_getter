@@ -1,0 +1,24 @@
+<%- include('./component/top.html') %>
+<form action="/find/" class="ui two column centered grid">
+  <div class="ui row">
+    <div class="ui column" style="margin-top: 40px">
+      <h1 class="ui center aligned icon header">
+          <i class="circular users icon"></i>
+          CARI FOTO ARTIS
+      </h1>
+      <div class="ui icon fluid input">
+        <input type="text" placeholder="Cari Di sini" name="q">
+        <i class="icon search"></i>
+      </div>
+    </div>
+  </div>
+  <div class="ui four column centered row">
+    <div class="ui column">
+      <button type="submit" class="ui basic fluid button">Cari</button>
+    </div>
+    <div class="ui column">
+      <a href="/random/" class="ui basic fluid button">Random!</a>
+    </div>
+  </div>
+</form>
+<%- include('./component/bottom.html') %>
