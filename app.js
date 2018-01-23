@@ -46,15 +46,15 @@ app.get('/fetch/:ig_name', (req, resp) => {
   const ig_name = req.params.ig_name
 
   // request to instagram
-  const reqUrl = `https://www.instagram.com/${ig_name}/media`;
+  const reqUrl = `https://www.instagram.com/${ig_name}/?__a=1`;
   request.get(reqUrl, (error, response, body) => {
-    const mediaData = JSON.parse(body).items;
+    const fullName = JSON.parse(body).user.full_name;
+    const mediaData = JSON.parse(body).user.media.nodes;
     
     let imgData = [];
     mediaData.forEach(entry => {
-      const fullName = entry.user.full_name;
-      const image = entry.images.standard_resolution;
-      imgData.push({'name':fullName, 'image':image});
+      const image = entry.display_src;
+      imgData.push({'name':fullName, 'image': {'url': image}});
     })
     resp.send(imgData);
   })
@@ -64,9 +64,9 @@ app.get('/fetch/:ig_name', (req, resp) => {
 app.get('/test/:ig_name', (req, resp) => {
   const ig_name = req.params.ig_name;
 
-  const reqUrl = `https://www.instagram.com/${ig_name}/media`;
+  const reqUrl = `https://www.instagram.com/${ig_name}/?__a=1`;
   request.get(reqUrl, (error, response, body) => {
-    const mediaExist = JSON.parse(body).items.length > 1;
+    const mediaExist = JSON.parse(body).user.length > 1;
     resp.send(mediaExist);
   });
 });
