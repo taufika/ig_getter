@@ -46,14 +46,15 @@ app.get('/fetch/:ig_name', (req, resp) => {
   const ig_name = req.params.ig_name
 
   // request to instagram
-  const reqUrl = `https://www.instagram.com/${ig_name}/?__a=1`;
+  const reqUrl = `https://www.instagram.com/${ig_name}`;
   request.get(reqUrl, (error, response, body) => {
-    const fullName = JSON.parse(body).user.full_name;
-    const mediaData = JSON.parse(body).user.media.nodes;
+    const jsonText = body.match(/<script type="text\/javascript">window\._sharedData = (.*)<\/script>/)[1].slice(0, -1);
+    const fullName = JSON.parse(jsonText).entry_data.ProfilePage[0].graphql.user.full_name;
+    const mediaData = JSON.parse(jsonText).entry_data.ProfilePage[0].graphql.user.edge_owner_to_timeline_media.edges;
     
     let imgData = [];
     mediaData.forEach(entry => {
-      const image = entry.display_src;
+      const image = entry.node.display_url;
       imgData.push({'name':fullName, 'image': {'url': image}});
     })
     resp.send(imgData);
@@ -64,9 +65,9 @@ app.get('/fetch/:ig_name', (req, resp) => {
 app.get('/test/:ig_name', (req, resp) => {
   const ig_name = req.params.ig_name;
 
-  const reqUrl = `https://www.instagram.com/${ig_name}/?__a=1`;
+  const reqUrl = `https://www.instagram.com/${ig_name}`;
   request.get(reqUrl, (error, response, body) => {
-    const mediaExist = JSON.parse(body).user.length > 1;
+    const mediaExist = body.length > 1;
     resp.send(mediaExist);
   });
 });
