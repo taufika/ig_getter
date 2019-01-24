@@ -47,6 +47,7 @@ app.get('/fetch/:ig_name', (req, resp) => {
 
   // request to instagram
   const reqUrl = `https://www.instagram.com/${ig_name}`;
+  console.info(`Fetching for ${reqUrl}`);
   request.get(reqUrl, (error, response, body) => {
     const jsonText = body.match(/<script type="text\/javascript">window\._sharedData = (.*)<\/script>/)[1].slice(0, -1);
     const fullName = JSON.parse(jsonText).entry_data.ProfilePage[0].graphql.user.full_name;
@@ -59,6 +60,24 @@ app.get('/fetch/:ig_name', (req, resp) => {
     })
     resp.send(imgData);
   })
+});
+
+// page for specific user
+app.get('/find', (req, resp) => {
+  const { q } = req.query;
+  if (!q || !q.length) {
+    resp.redirect('/random');
+    return;
+  }
+
+  const protocol = req.protocol;
+  const hostname = req.hostname;
+  const reqUrl = `${protocol}://${hostname}:${port}/fetch/${q}`;
+
+  reqPromise(reqUrl).then(body => {
+    const parsedBody = JSON.parse(body);
+    resp.render('template_listing.html', {data: parsedBody, nama: parsedBody[0].name});
+  });
 });
 
 // mini internal api for username publicity testing
